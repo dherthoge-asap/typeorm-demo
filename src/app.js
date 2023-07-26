@@ -231,6 +231,28 @@ app.put("/order/:id", function (req, res) { return __awaiter(void 0, void 0, voi
         }
     });
 }); });
+app.delete("/order/:id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var order, result, e_6;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 3, , 4]);
+                return [4 /*yield*/, orderRepo.findOneBy({ orderId: parseInt(req.params.id) })];
+            case 1:
+                order = _a.sent();
+                return [4 /*yield*/, orderRepo.remove(order)];
+            case 2:
+                result = _a.sent();
+                res.send(result);
+                return [3 /*break*/, 4];
+            case 3:
+                e_6 = _a.sent();
+                res.send({ error: "invalid order ID" });
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); });
 // Timeslot
 app.get("/timeslot", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var timeslots;
@@ -249,7 +271,7 @@ app.get("/timeslot", function (req, res) { return __awaiter(void 0, void 0, void
     });
 }); });
 app.put("/timeslot/:id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var timeslot, newTimeslot, result, e_6;
+    var timeslot, newTimeslot, result, e_7;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -266,7 +288,7 @@ app.put("/timeslot/:id", function (req, res) { return __awaiter(void 0, void 0, 
                 res.send(result);
                 return [3 /*break*/, 5];
             case 4:
-                e_6 = _a.sent();
+                e_7 = _a.sent();
                 res.send({ error: "did not provide existing ID or neccessary information" });
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
@@ -274,7 +296,7 @@ app.put("/timeslot/:id", function (req, res) { return __awaiter(void 0, void 0, 
     });
 }); });
 app.delete("/timeslot/:id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var timeslot, result, e_7;
+    var timeslot, result, e_8;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -288,7 +310,7 @@ app.delete("/timeslot/:id", function (req, res) { return __awaiter(void 0, void 
                 res.send(result);
                 return [3 /*break*/, 4];
             case 3:
-                e_7 = _a.sent();
+                e_8 = _a.sent();
                 res.send({ error: "invalid timeslot ID" });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];

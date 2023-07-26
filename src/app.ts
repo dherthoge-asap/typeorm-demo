@@ -24,6 +24,8 @@ const timeslotRepo = dataSource.getRepository(Timeslot)
 const app = express()
 app.use(express.json()) // parse req.body as JSON
 
+
+
 // ROUTES
 //
 
@@ -122,11 +124,11 @@ app.put("/order/:id", async (req: Request, res: Response) => {
 
 app.delete("/order/:id", async (req: Request, res: Response) => {
     try {
-        const order = await timeslotRepo.findOneBy({ timeslotId: parseInt(req.params.id)})
-        const result = await timeslotRepo.remove(order)
+        const order = await orderRepo.findOneBy({ orderId: parseInt(req.params.id)})
+        const result = await orderRepo.remove(order)
         res.send(result)
     } catch (e) {
-        res.send({ error: "invalid timeslot ID"})
+        res.send({ error: "invalid order ID" })
     }
 })
 
@@ -158,43 +160,11 @@ app.delete("/timeslot/:id", async (req: Request, res: Response) => {
         const result = await timeslotRepo.remove(timeslot)
         res.send(result)
     } catch (e) {
-        res.send({ error: "invalid timeslot ID"})
+        res.send({ error: "invalid timeslot ID" })
     }
 })
 
 
-// register routes
-// app.get("/user", async (req: Request, res: Response) => {
-//     const user = await dataSource.getRepository(User).find()
-//     res.json(user)
-// })
-
-// app.get("/user/:id", async (req: Request, res: Response) => {
-//     const results = await dataSource.getRepository(User).findOneBy({
-//         id: parseInt(req.params.id)
-//     })
-//     res.send(results)
-// })
-
-// app.post("/user", async (req: Request, res: Response) => {
-//     const user = await dataSource.getRepository(User).create(req.body)
-//     const results = await dataSource.getRepository(User).save(user)
-//     res.send(results)
-// })
-
-// app.put("/user/:id", async (req: Request, res: Response) => {
-//     const user = await dataSource.getRepository(User).findOneBy({
-//         id: parseInt(req.params.id)
-//     })
-//     dataSource.getRepository(User).merge(user, req.body)
-//     const results = await dataSource.getRepository(User).save(user)
-//     res.send(results)
-// })
-
-// app.delete("/user/:id", async (req: Request, res: Response) => {
-//     const results = await dataSource.getRepository(User).delete(req.params.id)
-//     res.send(results)
-// })
 
 // start express server
 app.listen(3000)
