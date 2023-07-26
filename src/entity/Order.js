@@ -42,7 +42,7 @@ var Order = exports.Order = /** @class */ (function () {
     ], Order.prototype, "lastName", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return Location_1.Location; }, function (location) { return location.orders; }, {
-            onDelete: 'SET NULL',
+            onDelete: 'CASCADE',
             eager: true
         }),
         __metadata("design:type", Location_1.Location)

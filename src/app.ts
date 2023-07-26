@@ -36,7 +36,7 @@ app.post("/location", async (req: Request, res: Response) => {
         const result = await locationRepo.save(location)
         res.send(result)
     } catch (e) {
-        res.send({ error: "did not provide necessary information"})
+        res.send(e.sqlMessage)
     }
 })
 
@@ -52,17 +52,21 @@ app.put("/location/:id", async (req: Request, res: Response) => {
         const result = await locationRepo.save(newLocation)
         res.send(result)
     } catch (e) {
-        res.send({ error: "invalid location ID or location information"})
+        res.send(e.sqlMessage)
     }
 })
 
 app.delete("/location/:id", async (req: Request, res: Response) => {
     try {
         const location = await locationRepo.findOneBy({ locationId: parseInt(req.params.id)})
+        if (location === null) {
+            res.send({ error: "invalid location ID" })
+            return
+        }
         const result = await locationRepo.remove(location)
         res.send(result)
     } catch (e) {
-        res.send({ error: "invalid location ID"})
+        res.send(e.sqlMessage)
     }
 })
 
@@ -74,6 +78,10 @@ app.post("/order", async (req: Request, res: Response) => {
 
         // set the Location for the order
         const location = await locationRepo.findOneBy({locationId: locationId})
+        if (location === null) {
+            res.send({ error: "invalid location ID" })
+            return
+        }
         orderDetails.location = location
 
         let order = new Order()
@@ -85,7 +93,7 @@ app.post("/order", async (req: Request, res: Response) => {
         const result = await timeslotRepo.save(timeslot)
         res.send(result.order)
     } catch (e) {
-        res.send({ error: "did not provide an existing location ID or necessary information"})
+        res.send(e.sqlMessage)
     }
 })
 
@@ -118,7 +126,7 @@ app.put("/order/:id", async (req: Request, res: Response) => {
         const result = await orderRepo.save(newOrder)
         res.send(result)
     } catch (e) {
-        res.send({ error: "did not provide existing ID or necessary information" })
+        res.send(e.sqlMessage)
     }
 })
 
@@ -128,7 +136,7 @@ app.delete("/order/:id", async (req: Request, res: Response) => {
         const result = await orderRepo.remove(order)
         res.send(result)
     } catch (e) {
-        res.send({ error: "invalid order ID" })
+        res.send(e.sqlMessage)
     }
 })
 
@@ -150,7 +158,7 @@ app.put("/timeslot/:id", async (req: Request, res: Response) => {
         const result = await timeslotRepo.save(newTimeslot)
         res.send(result)
     } catch (e) {
-        res.send({ error: "did not provide existing ID or neccessary information"})
+        res.send(e.sqlMessage)
     }
 })
 
@@ -160,7 +168,7 @@ app.delete("/timeslot/:id", async (req: Request, res: Response) => {
         const result = await timeslotRepo.remove(timeslot)
         res.send(result)
     } catch (e) {
-        res.send({ error: "invalid timeslot ID" })
+        res.send(e.sqlMessage)
     }
 })
 

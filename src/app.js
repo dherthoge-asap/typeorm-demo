@@ -75,7 +75,7 @@ app.post("/location", function (req, res) { return __awaiter(void 0, void 0, voi
                 return [3 /*break*/, 4];
             case 3:
                 e_1 = _a.sent();
-                res.send({ error: "did not provide necessary information" });
+                res.send(e_1.sqlMessage);
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
@@ -112,7 +112,7 @@ app.put("/location/:id", function (req, res) { return __awaiter(void 0, void 0, 
                 return [3 /*break*/, 5];
             case 4:
                 e_2 = _a.sent();
-                res.send({ error: "invalid location ID or location information" });
+                res.send(e_2.sqlMessage);
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
         }
@@ -127,6 +127,10 @@ app.delete("/location/:id", function (req, res) { return __awaiter(void 0, void 
                 return [4 /*yield*/, locationRepo.findOneBy({ locationId: parseInt(req.params.id) })];
             case 1:
                 location_3 = _a.sent();
+                if (location_3 === null) {
+                    res.send({ error: "invalid location ID" });
+                    return [2 /*return*/];
+                }
                 return [4 /*yield*/, locationRepo.remove(location_3)];
             case 2:
                 result = _a.sent();
@@ -134,7 +138,7 @@ app.delete("/location/:id", function (req, res) { return __awaiter(void 0, void 
                 return [3 /*break*/, 4];
             case 3:
                 e_3 = _a.sent();
-                res.send({ error: "invalid location ID" });
+                res.send(e_3.sqlMessage);
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
@@ -151,6 +155,10 @@ app.post("/order", function (req, res) { return __awaiter(void 0, void 0, void 0
                 return [4 /*yield*/, locationRepo.findOneBy({ locationId: locationId })];
             case 1:
                 location_4 = _b.sent();
+                if (location_4 === null) {
+                    res.send({ error: "invalid location ID" });
+                    return [2 /*return*/];
+                }
                 orderDetails.location = location_4;
                 order = new Order_1.Order();
                 timeslot = new Timeslot_1.Timeslot;
@@ -164,7 +172,7 @@ app.post("/order", function (req, res) { return __awaiter(void 0, void 0, void 0
                 return [3 /*break*/, 4];
             case 3:
                 e_4 = _b.sent();
-                res.send({ error: "did not provide an existing location ID or necessary information" });
+                res.send(e_4.sqlMessage);
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
@@ -225,7 +233,7 @@ app.put("/order/:id", function (req, res) { return __awaiter(void 0, void 0, voi
                 return [3 /*break*/, 6];
             case 5:
                 e_5 = _a.sent();
-                res.send({ error: "did not provide existing ID or necessary information" });
+                res.send(e_5.sqlMessage);
                 return [3 /*break*/, 6];
             case 6: return [2 /*return*/];
         }
@@ -247,7 +255,7 @@ app.delete("/order/:id", function (req, res) { return __awaiter(void 0, void 0, 
                 return [3 /*break*/, 4];
             case 3:
                 e_6 = _a.sent();
-                res.send({ error: "invalid order ID" });
+                res.send(e_6.sqlMessage);
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
@@ -289,7 +297,7 @@ app.put("/timeslot/:id", function (req, res) { return __awaiter(void 0, void 0, 
                 return [3 /*break*/, 5];
             case 4:
                 e_7 = _a.sent();
-                res.send({ error: "did not provide existing ID or neccessary information" });
+                res.send(e_7.sqlMessage);
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
         }
@@ -311,39 +319,11 @@ app.delete("/timeslot/:id", function (req, res) { return __awaiter(void 0, void 
                 return [3 /*break*/, 4];
             case 3:
                 e_8 = _a.sent();
-                res.send({ error: "invalid timeslot ID" });
+                res.send(e_8.sqlMessage);
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
     });
 }); });
-// register routes
-// app.get("/user", async (req: Request, res: Response) => {
-//     const user = await dataSource.getRepository(User).find()
-//     res.json(user)
-// })
-// app.get("/user/:id", async (req: Request, res: Response) => {
-//     const results = await dataSource.getRepository(User).findOneBy({
-//         id: parseInt(req.params.id)
-//     })
-//     res.send(results)
-// })
-// app.post("/user", async (req: Request, res: Response) => {
-//     const user = await dataSource.getRepository(User).create(req.body)
-//     const results = await dataSource.getRepository(User).save(user)
-//     res.send(results)
-// })
-// app.put("/user/:id", async (req: Request, res: Response) => {
-//     const user = await dataSource.getRepository(User).findOneBy({
-//         id: parseInt(req.params.id)
-//     })
-//     dataSource.getRepository(User).merge(user, req.body)
-//     const results = await dataSource.getRepository(User).save(user)
-//     res.send(results)
-// })
-// app.delete("/user/:id", async (req: Request, res: Response) => {
-//     const results = await dataSource.getRepository(User).delete(req.params.id)
-//     res.send(results)
-// })
 // start express server
 app.listen(3000);

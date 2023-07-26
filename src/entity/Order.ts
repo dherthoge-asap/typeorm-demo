@@ -8,10 +8,10 @@ export class Order {
     orderId: number
 
     @Column()
-    status: "unscheduled" | "scheduled" | "complete"
+    status: string
 
     @Column()
-    type: "morning" | "afternoon" | "night"
+    type: string
 
     @Column('text')
     note: string
@@ -23,7 +23,7 @@ export class Order {
     lastName: string
 
     @ManyToOne(() => Location, (location) => location.orders, {
-        onDelete: 'SET NULL',
+        onDelete: 'CASCADE',
         eager: true
     })
     location?: Location | null
