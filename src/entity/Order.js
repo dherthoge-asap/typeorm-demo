@@ -9,17 +9,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Order = exports.OrderType = void 0;
+exports.Order = exports.OrderTypes = void 0;
 var typeorm_1 = require("typeorm");
 var Location_1 = require("./Location");
 var Timeslot_1 = require("./Timeslot");
 var OrderContact_1 = require("./OrderContact");
-var OrderType;
-(function (OrderType) {
-    OrderType["MORNING"] = "morning";
-    OrderType["AFTERNOON"] = "afternoon";
-    OrderType["NIGHT"] = "night";
-})(OrderType || (exports.OrderType = OrderType = {}));
+var OrderTypes;
+(function (OrderTypes) {
+    OrderTypes["MORNING"] = "morning";
+    OrderTypes["AFTERNOON"] = "afternoon";
+    OrderTypes["NIGHT"] = "night";
+})(OrderTypes || (exports.OrderTypes = OrderTypes = {}));
 var Order = exports.Order = /** @class */ (function () {
     function Order() {
     }
@@ -33,8 +33,8 @@ var Order = exports.Order = /** @class */ (function () {
     ], Order.prototype, "status", void 0);
     __decorate([
         (0, typeorm_1.Column)({
-            type: "varchar",
-            enum: OrderType
+            type: "enum",
+            enum: OrderTypes
         }),
         __metadata("design:type", String)
     ], Order.prototype, "type", void 0);

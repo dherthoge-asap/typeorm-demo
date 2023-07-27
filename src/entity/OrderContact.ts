@@ -19,7 +19,7 @@ export class OrderContact {
     email: string
 
     @ManyToMany(() => Order, (order) => order.orderContacts, {
-        // cascade: ["remove", "update"]
+        // cascade: true
         // eager: true
     })
     orders: Order[]

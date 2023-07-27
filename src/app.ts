@@ -102,14 +102,17 @@ app.post("/order", async (req: Request, res: Response) => {
         timeslot = timeslotDetails
         order.orderContacts = orderContacts
         timeslot.order = order
-        console.log(orderContacts)
 
-        for (let orderContact of orderContacts) {
-            if (orderContact.orders === undefined) orderContact.orders = []
-            orderContact.orders.push(order)
-            await orderContactRepo.save(orderContact)
+        for (let oc of orderContacts) {
+            if (oc.orders === undefined)
+                oc.orders = []
+            oc.orders.push(order)
         }
+
         timeslot = await timeslotRepo.save(timeslot)
+        for (let oc of orderContacts)
+            await orderContactRepo.save(oc)
+
         const result = await orderRepo.findOne({
             relations: {
                 timeslot: true,
@@ -197,6 +200,10 @@ app.delete("/order/:orderId", async (req: Request, res: Response) => {
 
             The line below this comment deletes the Timeslot and then deletes
             the owning order. Why? Idk...
+
+            Here are a couple links that talk about it:
+                - https://github.com/typeorm/typeorm/issues/5795
+                - https://github.com/typeorm/typeorm/issues/1460#issuecomment-439996651
         */
         const result = await timeslotRepo.remove(order.timeslot)
         console.log(result)

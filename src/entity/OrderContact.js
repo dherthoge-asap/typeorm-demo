@@ -37,7 +37,7 @@ var OrderContact = exports.OrderContact = /** @class */ (function () {
     ], OrderContact.prototype, "email", void 0);
     __decorate([
         (0, typeorm_1.ManyToMany)(function () { return Order_1.Order; }, function (order) { return order.orderContacts; }, {
-        // cascade: ["remove", "update"]
+        // cascade: true
         // eager: true
         }),
         __metadata("design:type", Array)

@@ -3,7 +3,7 @@ import { Location } from "./Location"
 import { Timeslot } from "./Timeslot"
 import { OrderContact } from "./OrderContact"
 
-export enum OrderType {
+export enum OrderTypes {
     MORNING = "morning",
     AFTERNOON = "afternoon",
     NIGHT = "night"
@@ -18,10 +18,10 @@ export class Order {
     status: string
 
     @Column({
-        type: "varchar",
-        enum: OrderType
+        type: "enum",
+        enum: OrderTypes
     })
-    type: OrderType
+    type: OrderTypes
 
     @Column('text')
     note: string

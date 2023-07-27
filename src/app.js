@@ -152,15 +152,15 @@ app.delete("/location/:locationId", function (req, res) { return __awaiter(void 
 }); });
 // Order
 app.post("/order", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, locationId, orderDetails, orderContactsDetails, timeslotDetails, location_4, orderContacts, _i, orderContactsDetails_1, orderContactDetails, tmp, order, timeslot, _b, orderContacts_1, orderContact, result, e_4;
-    return __generator(this, function (_c) {
-        switch (_c.label) {
+    var _a, locationId, orderDetails, orderContactsDetails, timeslotDetails, location_4, orderContacts, _i, orderContactsDetails_1, orderContactDetails, tmp, order, timeslot, _b, orderContacts_1, oc, _c, orderContacts_2, oc, result, e_4;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
             case 0:
-                _c.trys.push([0, 8, , 9]);
+                _d.trys.push([0, 8, , 9]);
                 _a = req.body, locationId = _a.locationId, orderDetails = _a.orderDetails, orderContactsDetails = _a.orderContactsDetails, timeslotDetails = _a.timeslotDetails;
                 return [4 /*yield*/, locationRepo.findOneBy({ locationId: locationId })];
             case 1:
-                location_4 = _c.sent();
+                location_4 = _d.sent();
                 if (location_4 === null) {
                     res.send({ error: "invalid location ID" });
                     return [2 /*return*/];
@@ -179,40 +179,42 @@ app.post("/order", function (req, res) { return __awaiter(void 0, void 0, void 0
                 timeslot = timeslotDetails;
                 order.orderContacts = orderContacts;
                 timeslot.order = order;
-                console.log(orderContacts);
-                _b = 0, orderContacts_1 = orderContacts;
-                _c.label = 2;
+                for (_b = 0, orderContacts_1 = orderContacts; _b < orderContacts_1.length; _b++) {
+                    oc = orderContacts_1[_b];
+                    if (oc.orders === undefined)
+                        oc.orders = [];
+                    oc.orders.push(order);
+                }
+                return [4 /*yield*/, timeslotRepo.save(timeslot)];
             case 2:
-                if (!(_b < orderContacts_1.length)) return [3 /*break*/, 5];
-                orderContact = orderContacts_1[_b];
-                if (orderContact.orders === undefined)
-                    orderContact.orders = [];
-                orderContact.orders.push(order);
-                return [4 /*yield*/, orderContactRepo.save(orderContact)];
+                timeslot = _d.sent();
+                _c = 0, orderContacts_2 = orderContacts;
+                _d.label = 3;
             case 3:
-                _c.sent();
-                _c.label = 4;
+                if (!(_c < orderContacts_2.length)) return [3 /*break*/, 6];
+                oc = orderContacts_2[_c];
+                return [4 /*yield*/, orderContactRepo.save(oc)];
             case 4:
-                _b++;
-                return [3 /*break*/, 2];
-            case 5: return [4 /*yield*/, timeslotRepo.save(timeslot)];
-            case 6:
-                timeslot = _c.sent();
-                return [4 /*yield*/, orderRepo.findOne({
-                        relations: {
-                            timeslot: true,
-                            location: true,
-                            orderContacts: true
-                        },
-                        where: {
-                            orderId: timeslot.order.orderId
-                        }
-                    })];
+                _d.sent();
+                _d.label = 5;
+            case 5:
+                _c++;
+                return [3 /*break*/, 3];
+            case 6: return [4 /*yield*/, orderRepo.findOne({
+                    relations: {
+                        timeslot: true,
+                        location: true,
+                        orderContacts: true
+                    },
+                    where: {
+                        orderId: timeslot.order.orderId
+                    }
+                })];
             case 7:
-                result = _c.sent();
+                result = _d.sent();
                 return [2 /*return*/, res.send(result)];
             case 8:
-                e_4 = _c.sent();
+                e_4 = _d.sent();
                 res.send({ error: e_4.sqlMessage });
                 return [3 /*break*/, 9];
             case 9: return [2 /*return*/];
@@ -330,13 +332,16 @@ app.delete("/order/:orderId", function (req, res) { return __awaiter(void 0, voi
                 
                             i.e.: const result = await orderRepo.remove(order)
                 
-                            the above line SHOULD delete the Order's timeslot, however it
+                            The above line SHOULD delete the Order's timeslot, however it
                             doesn't😤
                 
                             The line below this comment deletes the Timeslot and then deletes
                             the owning order. Why? Idk...
+                
+                            Here are a couple links that talk about it:
+                                - https://github.com/typeorm/typeorm/issues/5795
+                                - https://github.com/typeorm/typeorm/issues/1460#issuecomment-439996651
                         */
-                        // const result = await orderRepo.remove(order)
                     ];
                 return [4 /*yield*/, timeslotRepo.remove(order.timeslot)];
             case 2:
@@ -438,7 +443,7 @@ app.delete("/timeslot/:timeslotId", function (req, res) { return __awaiter(void 
 // path var "orderId" is the orderId (req.params)
 // contacts to drop are given as query params (req.query)
 app.put("/dropcontactfromorder/:orderId", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var order, orderContacts, orderContactIds_1, _i, orderContacts_2, orderContact, orderResult, orderContactResult, e_9;
+    var order, orderContacts, orderContactIds_1, _i, orderContacts_3, orderContact, orderResult, orderContactResult, e_9;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, orderRepo.findOne({
@@ -473,8 +478,8 @@ app.put("/dropcontactfromorder/:orderId", function (req, res) { return __awaiter
                 order.orderContacts = order.orderContacts.filter(function (oc) {
                     return !orderContactIds_1.includes(oc.orderContactId);
                 });
-                for (_i = 0, orderContacts_2 = orderContacts; _i < orderContacts_2.length; _i++) {
-                    orderContact = orderContacts_2[_i];
+                for (_i = 0, orderContacts_3 = orderContacts; _i < orderContacts_3.length; _i++) {
+                    orderContact = orderContacts_3[_i];
                     orderContact.orders = orderContact.orders.filter(function (o) { return o.orderId !== order.orderId; });
                 }
                 return [4 /*yield*/, orderRepo.save(order)];
@@ -499,7 +504,7 @@ app.put("/dropcontactfromorder/:orderId", function (req, res) { return __awaiter
 // path var "orderId" is the orderId (req.params)
 // contacts to add are given as query params (req.query)
 app.put("/addcontacttoorder/:orderId", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var order, orderContacts, orderContactIds, _i, orderContacts_3, oc, orderResult, orderContactResult, e_10;
+    var order, orderContacts, orderContactIds, _i, orderContacts_4, oc, orderResult, orderContactResult, e_10;
     var _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
@@ -533,8 +538,8 @@ app.put("/addcontacttoorder/:orderId", function (req, res) { return __awaiter(vo
                 orderContactIds = [];
                 orderContactIds.push.apply(orderContactIds, orderContacts.map(function (oc) { return oc.orderContactId; }));
                 (_a = order.orderContacts).push.apply(_a, orderContacts);
-                for (_i = 0, orderContacts_3 = orderContacts; _i < orderContacts_3.length; _i++) {
-                    oc = orderContacts_3[_i];
+                for (_i = 0, orderContacts_4 = orderContacts; _i < orderContacts_4.length; _i++) {
+                    oc = orderContacts_4[_i];
                     oc.orders.push(order);
                 }
                 return [4 /*yield*/, orderRepo.save(order)];
