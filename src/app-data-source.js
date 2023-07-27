@@ -5,6 +5,7 @@ var typeorm_1 = require("typeorm");
 var Order_1 = require("./entity/Order");
 var Location_1 = require("./entity/Location");
 var Timeslot_1 = require("./entity/Timeslot");
+var OrderContact_1 = require("./entity/OrderContact");
 exports.dataSource = new typeorm_1.DataSource({
     type: "mysql",
     host: "localhost",
@@ -12,7 +13,7 @@ exports.dataSource = new typeorm_1.DataSource({
     username: "root",
     password: "password",
     database: "test",
-    entities: [Order_1.Order, Location_1.Location, Timeslot_1.Timeslot],
+    entities: [Location_1.Location, Order_1.Order, OrderContact_1.OrderContact, Timeslot_1.Timeslot],
     logging: true,
     synchronize: true,
 });

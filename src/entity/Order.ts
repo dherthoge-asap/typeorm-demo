@@ -1,6 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn, ManyToMany, JoinTable } from "typeorm"
 import { Location } from "./Location"
 import { Timeslot } from "./Timeslot"
+import { OrderContact } from "./OrderContact"
+
+export enum OrderType {
+    MORNING = "morning",
+    AFTERNOON = "afternoon",
+    NIGHT = "night"
+}
 
 @Entity()
 export class Order {
@@ -10,25 +17,26 @@ export class Order {
     @Column()
     status: string
 
-    @Column()
-    type: string
+    @Column({
+        type: "varchar",
+        enum: OrderType
+    })
+    type: OrderType
 
     @Column('text')
     note: string
 
-    @Column()
-    firstName: string
-
-    @Column()
-    lastName: string
-
-    @ManyToOne(() => Location, (location) => location.orders, {
-        onDelete: 'CASCADE',
-        eager: true
-    })
+    @ManyToOne(() => Location, (location) => location.orders, { onDelete: 'SET NULL' })
     location?: Location | null
 
-    @OneToOne(() => Timeslot, (timeslot) => timeslot.order, { eager: true })
+    @OneToOne(() => Timeslot, (timeslot) => timeslot.order, {// @OneToOne("Timeslot", "order", {
+        // eager: true
+        onDelete: "CASCADE"
+    })
     @JoinColumn()
     timeslot?: Timeslot | null
+
+    @ManyToMany(() => OrderContact, (orderContact) => orderContact.orders)
+    @JoinTable()
+    orderContacts: OrderContact[]
 }

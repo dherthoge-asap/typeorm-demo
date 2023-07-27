@@ -9,33 +9,41 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Timeslot = void 0;
+exports.OrderContact = void 0;
 var typeorm_1 = require("typeorm");
 var Order_1 = require("./Order");
-var Timeslot = exports.Timeslot = /** @class */ (function () {
-    function Timeslot() {
+var OrderContact = exports.OrderContact = /** @class */ (function () {
+    function OrderContact() {
     }
     __decorate([
         (0, typeorm_1.PrimaryGeneratedColumn)(),
         __metadata("design:type", Number)
-    ], Timeslot.prototype, "timeslotId", void 0);
+    ], OrderContact.prototype, "orderContactId", void 0);
     __decorate([
         (0, typeorm_1.Column)(),
         __metadata("design:type", String)
-    ], Timeslot.prototype, "fromTime", void 0);
+    ], OrderContact.prototype, "firstName", void 0);
     __decorate([
         (0, typeorm_1.Column)(),
         __metadata("design:type", String)
-    ], Timeslot.prototype, "toTime", void 0);
+    ], OrderContact.prototype, "lastName", void 0);
     __decorate([
-        (0, typeorm_1.OneToOne)(function () { return Order_1.Order; }, function (order) { return order.timeslot; }, {
-            cascade: true,
-            onDelete: "CASCADE"
+        (0, typeorm_1.Column)(),
+        __metadata("design:type", String)
+    ], OrderContact.prototype, "phoneNumber", void 0);
+    __decorate([
+        (0, typeorm_1.Column)(),
+        __metadata("design:type", String)
+    ], OrderContact.prototype, "email", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToMany)(function () { return Order_1.Order; }, function (order) { return order.orderContacts; }, {
+        // cascade: ["remove", "update"]
+        // eager: true
         }),
-        __metadata("design:type", Order_1.Order)
-    ], Timeslot.prototype, "order", void 0);
-    Timeslot = __decorate([
+        __metadata("design:type", Array)
+    ], OrderContact.prototype, "orders", void 0);
+    OrderContact = __decorate([
         (0, typeorm_1.Entity)()
-    ], Timeslot);
-    return Timeslot;
+    ], OrderContact);
+    return OrderContact;
 }());

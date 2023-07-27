@@ -2,6 +2,7 @@ import { DataSource } from "typeorm"
 import { Order } from "./entity/Order"
 import { Location } from "./entity/Location"
 import { Timeslot } from "./entity/Timeslot"
+import { OrderContact } from "./entity/OrderContact"
 
 export const dataSource = new DataSource({
     type: "mysql",
@@ -10,7 +11,7 @@ export const dataSource = new DataSource({
     username: "root",
     password: "password",
     database: "test",
-    entities: [Order, Location, Timeslot],
+    entities: [Location, Order, OrderContact, Timeslot],
     logging: true,
     synchronize: true,
 })

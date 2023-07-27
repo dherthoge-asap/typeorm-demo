@@ -13,6 +13,9 @@ export class Timeslot {
     @Column()
     toTime: string
 
-    @OneToOne(() => Order, (order) => order.timeslot, { cascade: true })
+    @OneToOne(() => Order, (order) => order.timeslot, {
+        cascade: true,
+        onDelete: "CASCADE"
+    })
     order: Order
 }

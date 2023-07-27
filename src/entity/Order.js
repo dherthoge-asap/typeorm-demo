@@ -9,10 +9,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Order = void 0;
+exports.Order = exports.OrderType = void 0;
 var typeorm_1 = require("typeorm");
 var Location_1 = require("./Location");
 var Timeslot_1 = require("./Timeslot");
+var OrderContact_1 = require("./OrderContact");
+var OrderType;
+(function (OrderType) {
+    OrderType["MORNING"] = "morning";
+    OrderType["AFTERNOON"] = "afternoon";
+    OrderType["NIGHT"] = "night";
+})(OrderType || (exports.OrderType = OrderType = {}));
 var Order = exports.Order = /** @class */ (function () {
     function Order() {
     }
@@ -25,7 +32,10 @@ var Order = exports.Order = /** @class */ (function () {
         __metadata("design:type", String)
     ], Order.prototype, "status", void 0);
     __decorate([
-        (0, typeorm_1.Column)(),
+        (0, typeorm_1.Column)({
+            type: "varchar",
+            enum: OrderType
+        }),
         __metadata("design:type", String)
     ], Order.prototype, "type", void 0);
     __decorate([
@@ -33,25 +43,22 @@ var Order = exports.Order = /** @class */ (function () {
         __metadata("design:type", String)
     ], Order.prototype, "note", void 0);
     __decorate([
-        (0, typeorm_1.Column)(),
-        __metadata("design:type", String)
-    ], Order.prototype, "firstName", void 0);
-    __decorate([
-        (0, typeorm_1.Column)(),
-        __metadata("design:type", String)
-    ], Order.prototype, "lastName", void 0);
-    __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return Location_1.Location; }, function (location) { return location.orders; }, {
-            onDelete: 'CASCADE',
-            eager: true
-        }),
+        (0, typeorm_1.ManyToOne)(function () { return Location_1.Location; }, function (location) { return location.orders; }, { onDelete: 'SET NULL' }),
         __metadata("design:type", Location_1.Location)
     ], Order.prototype, "location", void 0);
     __decorate([
-        (0, typeorm_1.OneToOne)(function () { return Timeslot_1.Timeslot; }, function (timeslot) { return timeslot.order; }, { eager: true }),
+        (0, typeorm_1.OneToOne)(function () { return Timeslot_1.Timeslot; }, function (timeslot) { return timeslot.order; }, {
+            // eager: true
+            onDelete: "CASCADE"
+        }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", Timeslot_1.Timeslot)
     ], Order.prototype, "timeslot", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToMany)(function () { return OrderContact_1.OrderContact; }, function (orderContact) { return orderContact.orders; }),
+        (0, typeorm_1.JoinTable)(),
+        __metadata("design:type", Array)
+    ], Order.prototype, "orderContacts", void 0);
     Order = __decorate([
         (0, typeorm_1.Entity)()
     ], Order);
